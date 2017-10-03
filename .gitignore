@@ -24,7 +24,9 @@ Thumbs.db
 /.phpintel/*
 
 ### DIFFERENT TYPE OF MASTER CONFIGS ###
-.env
+.env*
+!.env.example
+!.env.travis
 composer.lock
 
 ### ASSET EXCLUSIONS ###

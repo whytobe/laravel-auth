@@ -1,25 +1,43 @@
 <?php
 
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Support\Facades\Log;
-use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
-
-/*
-|--------------------------------------------------------------------------
-| Create The Application
-|--------------------------------------------------------------------------
-|
-| The first thing we will do is create a new Laravel application instance
-| which serves as the "glue" for all the components of Laravel, and is
-| the IoC container for the system binding all of the various parts.
-|
-*/
 
 $app = new Illuminate\Foundation\Application(
     realpath(__DIR__.'/../')
 );
+
+    use Illuminate\Contracts\Foundation\Application;
+    use Illuminate\Support\Facades\Log;
+    use Monolog\Formatter\LineFormatter;
+    use Monolog\Handler\StreamHandler;
+    use Monolog\Logger;
+
+    use Dotenv\Dotenv;
+
+    $env = $app->detectEnvironment(function () {
+        $environmentPath = __DIR__ . '/../.env';
+        if (file_exists($environmentPath)) {
+            $setEnv = trim(file_get_contents($environmentPath));
+            putenv("APP_ENV=$setEnv");
+            if (getenv('APP_ENV')) {
+                $environmentFile = __DIR__ . '/../.env.' . getenv('APP_ENV');
+                if (file_exists($environmentFile)) {
+                    $dotenv = new Dotenv(__DIR__ . '/../', '.env.' . getenv('APP_ENV'));
+                    $dotenv->load();
+                }
+            }
+        }
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Create The Application
+    |--------------------------------------------------------------------------
+    |
+    | The first thing we will do is create a new Laravel application instance
+    | which serves as the "glue" for all the components of Laravel, and is
+    | the IoC container for the system binding all of the various parts.
+    |
+    */
 
 /*
 |--------------------------------------------------------------------------
